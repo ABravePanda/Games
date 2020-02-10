@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-import actions.Base;
-import objects.Card;
-import objects.Deck;
+import com.tompkinsdevelopment.games.actions.Base;
+import com.tompkinsdevelopment.games.objects.Card;
+import com.tompkinsdevelopment.games.objects.Deck;
+
 
 public class GoFish
 {

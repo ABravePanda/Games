@@ -1,7 +1,7 @@
 package com.tompkinsdevelopment.games.actions;
 
-import com.tompkinsdevelopment.games.objects.enums.Card;
-import com.tompkinsdevelopment.games.objects.enums.Deck;
+import com.tompkinsdevelopment.games.objects.Card;
+import com.tompkinsdevelopment.games.objects.Deck;
 import com.tompkinsdevelopment.games.objects.enums.Suit;
 
 public class Base {

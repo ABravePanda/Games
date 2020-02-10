@@ -1,6 +1,6 @@
 package com.tompkinsdevelopment.games.objects;
 
-import objects.enums.Suit;
+import com.tompkinsdevelopment.games.objects.enums.Suit;
 
 public class Card 
 {
