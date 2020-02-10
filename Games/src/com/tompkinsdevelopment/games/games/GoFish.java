@@ -27,10 +27,10 @@ public class GoFish
 	
 	private void showCards()
 	{
-		System.out.print("[INFO] Here are your cards");
+		System.out.print("[INFO] Here are your cards: ");
 		for(Card card : player1Cards)
 		{
-			System.out.print(", ["  + card + "]");
+			System.out.print("["  + card + "] ");
 		}
 	}
 	
@@ -64,27 +64,44 @@ public class GoFish
 		return count;
 	}
 	
+	private void pickupCard()
+	{
+		if(turn == 1)
+		{
+			System.out.println("[INFO] Picking up a card from the pile...");
+			Card card = deck.drawnCard();
+			System.out.println("[INFO] You have picked up a [" + card + "]");
+			player1Cards.add(card);
+			checkMatches();
+			turn++;
+			move();
+		}
+	}
+	
 	private void move()
 	{
 		//player1 turn
 		if(turn == 1)
 		{
 			System.out.println("[INFO] It's your turn!");
-			if(player1Cards.size() != 7)
-			{
-				System.out.println("You have picked up " + cardCheck(player1Cards) + " cards.");
-			}
+			System.out.println("");
 			showCards();
+			System.out.println("");
 			checkMatches();
-			showCards();
+			System.out.println("");
 			int player = playerSelect();
 			int card = chooseCard();
+			askCard(player, card);
 		}
 		
 		//player2 turn
 		else if(turn == 2)
 		{
 			System.out.println("[INFO] It's player 2's turn!");
+			System.out.println("");
+			int player = playerSelect();
+			int card = chooseCard();
+			askCard(player, card);
 		}
 		
 		//player3 turn
@@ -150,30 +167,27 @@ public class GoFish
 	
 	private void checkMatches()
 	{
+		boolean match = false;
 		if(turn == 1)
 		{
-			ArrayList<Card> playerCards = new ArrayList<Card>();
-			for(Card card : player1Cards)
+			ArrayList<Card> cardList = player1Cards;
+			for(int i = 0; i < player1Cards.size(); i++)
 			{
-				for(Card card2 : player1Cards)
+				for(int j = 0; j < cardList.size(); j++)
 				{
-					if(card != card2)
+					if(player1Cards.get(i).getValue() == cardList.get(j).getValue() && player1Cards.get(i) != cardList.get(j))
 					{
-						if(card.getValue() == card2.getValue()) 
-						{
-							System.out.println("Match found! " + card + " - " + card2);
-							continue;
-						}
-						else
-						{
-							playerCards.add(card);
-						}
+						match = true;
+						System.out.println("[MATCH] Found a match! - " + "[" + player1Cards.get(i) + "] & [" + cardList.get(j) + "]");
+						cardList.remove(j);
+						cardList.remove(i);
+						continue;
 					}
-					else playerCards.add(card);
 				}
 			}
-			player1Cards = playerCards;
 		}
+		if(match) showCards();
+		
 	}
 
 	private int chooseCard()
@@ -186,28 +200,56 @@ public class GoFish
 			String choice = in.nextLine();
 			if(choice.equalsIgnoreCase("King")) 
 			{
-				System.out.println("Asking for a 'King'");
+				System.out.println("[YOU] Asking for a 'King'.");
 				return 13;
 			}
 			else if(choice.equalsIgnoreCase("Queen")) 
 			{
-				System.out.println("Asking for a 'Queen'");
+				System.out.println("[YOU] Asking for a 'Queen'.");
 				return 12;
 			}
 			else if(choice.equalsIgnoreCase("Jack"))  
 			{
-				System.out.println("Asking for a 'Jack'");
+				System.out.println("[YOU] Asking for a 'Jack'.");
 				return 11;
 			}
 			else if(choice.equalsIgnoreCase("Ace")) 
 			{
-				System.out.println("Asking for an 'Ace'");
-				return 11;
+				System.out.println("[YOU] Asking for an 'Ace'.");
+				return 1;
 			}
-			else 
+			else
 			{
-				System.out.println("Asking for a '" + choice + "'.");
-				return Integer.valueOf(choice);
+				if(Integer.valueOf(choice) != null && (Integer.valueOf(choice) > 10 && Integer.valueOf(choice) < 2))
+				{
+					System.out.println("[ERROR] There was an error trying to find that.");
+					chooseCard();
+				}
+				else
+				{
+					System.out.println("[YOU] Asking for a '" + choice + "'.");
+					return Integer.valueOf(choice);
+				}
+			}
+		}
+		else if(turn == 2)
+		{
+			Random r = new Random();
+			int random = r.nextInt(13);
+			random+=1;
+			
+			switch(random)
+			{
+			case 1: System.out.println("[Player 2] Asking for an 'Ace'.");
+			return 1;
+			case 11: System.out.println("[Player 2] Asking for a 'Jack'.");
+			return 11;
+			case 12: System.out.println("[Player 2] Asking for a 'Queen'.");
+			return 12;
+			case 13: System.out.println("[Player 2] Asking for a 'King'.");
+			return 13;
+			default: System.out.println("[Player 2] Asking for a '" + random + "'.");
+			return random;
 			}
 		}
 		return 0;
@@ -217,17 +259,79 @@ public class GoFish
 	{
 		if(turn == 1)
 		{
+			int count = 0;
 			if(player == 2)
 			{
-				int count = 0;
-				for(Card p2Card : player2Cards)
+				ArrayList<Card> cards = player2Cards;
+				for(Card p2Card : cards)
 				{
-					//if(p2Card)
+					if(p2Card.getValue() == card)
+					{
+						player2Cards.remove(p2Card);
+						player1Cards.add(p2Card);
+						count++;
+					}
+				}
+				if(count == 0) 
+				{
+					System.out.println("[Player 2] Go Fish!");
+					pickupCard();
+				}
+				else 
+				{
+					System.out.println("[Player 2] I have " + count + " of that card!");
+					move();
 				}
 			}
 			else if(player == 3)
 			{
-				
+				ArrayList<Card> cards = player3Cards;
+				for(Card p3Card : cards)
+				{
+					if(p3Card.getValue() == card)
+					{
+						player3Cards.remove(p3Card);
+						player1Cards.add(p3Card);
+						count++;
+					}
+				}
+				if(count == 0)				
+				{
+					System.out.println("[Player 3] Go Fish!");
+					pickupCard();
+				}
+				else 
+				{
+					System.out.println("[Player 3] I have " + count + " of that card!");
+					move();
+				}
+			}
+		}
+		if(turn == 2)
+		{
+			int count = 0;
+			if(player == 1)
+			{
+				ArrayList<Card> cards = player1Cards;
+				for(Card p1Card : cards)
+				{
+					if(p1Card.getValue() == card)
+					{
+						player1Cards.remove(p1Card);
+						player2Cards.add(p1Card);
+						count++;
+					}
+				}
+				if(count == 0) 
+				{
+					System.out.println("[YOU] Go Fish!");
+					pickupCard();
+				}
+				else 
+				{
+					System.out.println("[YOU] I have " + count + " of that card!");
+					move();
+				}
 			}
 		}
 	}
