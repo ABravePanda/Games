@@ -222,7 +222,7 @@ public class GoFish
 				int count = 0;
 				for(Card p2Card : player2Cards)
 				{
-					if(p2Card)
+					//if(p2Card)
 				}
 			}
 			else if(player == 3)
