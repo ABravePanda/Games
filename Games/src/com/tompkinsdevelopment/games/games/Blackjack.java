@@ -76,18 +76,32 @@ public class Blackjack
         {
         	System.out.println("[INFO] The ace has been selected as a high card for 11 points.");
         	card.setValue(15);
+        	
+        	if(calcPoints(playerCards) == 21) 
+        	{
+        		getWinner();
+        	}
         	return card;
         }
         else if(s.equalsIgnoreCase("low") || s.equalsIgnoreCase("l"))
         {
         	System.out.println("[INFO] The ace has been selected as a low card for 1 point.");
         	card.setValue(-1);
+        	
+        	if(calcPoints(playerCards) == 21) 
+        	{
+        		getWinner();
+        	}
         	return card;
         }
         else
         {
         	System.out.println("[INFO] " + s + " not detected. Would you like your ace as a 'HIGH' (11 points) or a 'LOW' (1 point).");
         	aceCounter(card);
+        	if(calcPoints(playerCards) == 21) 
+        	{
+        		getWinner();
+        	}
         }
         return card;
 	}
