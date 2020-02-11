@@ -51,18 +51,6 @@ public class GoFish
 		
 		System.out.println("[INFO] The dealer has dealt the cards.");
 	}
-
-	private int cardCheck(ArrayList<Card> cards)
-	{
-		int count = 0;
-		for(int i = cards.size(); i < 7; i++)
-		{
-			Card card = deck.drawnCard();
-			cards.add(card);
-			count++;
-		}
-		return count;
-	}
 	
 	private void pickupCard()
 	{
@@ -74,6 +62,24 @@ public class GoFish
 			player1Cards.add(card);
 			checkMatches();
 			turn++;
+			move();
+		}
+		else if(turn == 2)
+		{
+			System.out.println("[INFO] Player 2 is picking up a card from the pile...");
+			Card card = deck.drawnCard();
+			player2Cards.add(card);
+			checkMatches();
+			turn++;
+			move();
+		}
+		else if(turn == 3)
+		{
+			System.out.println("[INFO] Player 3 is picking up a card from the pile...");
+			Card card = deck.drawnCard();
+			player3Cards.add(card);
+			checkMatches();
+			turn=1;
 			move();
 		}
 	}
@@ -108,6 +114,10 @@ public class GoFish
 		else if(turn == 3)
 		{
 			System.out.println("[INFO] It's player 3's turn!");
+			System.out.println("");
+			int player = playerSelect();
+			int card = chooseCard();
+			askCard(player, card);
 		}
 	}
 	
@@ -186,6 +196,40 @@ public class GoFish
 				}
 			}
 		}
+		if(turn == 2)
+		{
+			ArrayList<Card> cardList = player2Cards;
+			for(int i = 0; i < player2Cards.size(); i++)
+			{
+				for(int j = 0; j < cardList.size(); j++)
+				{
+					if(player2Cards.get(i).getValue() == cardList.get(j).getValue() && player2Cards.get(i) != cardList.get(j))
+					{
+						match = true;
+						cardList.remove(j);
+						cardList.remove(i);
+						continue;
+					}
+				}
+			}
+		}
+		if(turn == 3)
+		{
+			ArrayList<Card> cardList = player3Cards;
+			for(int i = 0; i < player3Cards.size(); i++)
+			{
+				for(int j = 0; j < cardList.size(); j++)
+				{
+					if(player3Cards.get(i).getValue() == cardList.get(j).getValue() && player3Cards.get(i) != cardList.get(j))
+					{
+						match = true;
+						cardList.remove(j);
+						cardList.remove(i);
+						continue;
+					}
+				}
+			}
+		}
 		if(match) showCards();
 		
 	}
@@ -252,6 +296,26 @@ public class GoFish
 			return random;
 			}
 		}
+		else if(turn == 3)
+		{
+			Random r = new Random();
+			int random = r.nextInt(13);
+			random+=1;
+			
+			switch(random)
+			{
+			case 1: System.out.println("[Player 3] Asking for an 'Ace'.");
+			return 1;
+			case 11: System.out.println("[Player 3] Asking for a 'Jack'.");
+			return 11;
+			case 12: System.out.println("[Player 3] Asking for a 'Queen'.");
+			return 12;
+			case 13: System.out.println("[Player 3] Asking for a 'King'.");
+			return 13;
+			default: System.out.println("[Player 3] Asking for a '" + random + "'.");
+			return random;
+			}
+		}
 		return 0;
 	}
 
@@ -307,7 +371,7 @@ public class GoFish
 				}
 			}
 		}
-		if(turn == 2)
+		else if(turn == 2)
 		{
 			int count = 0;
 			if(player == 1)
@@ -330,6 +394,79 @@ public class GoFish
 				else 
 				{
 					System.out.println("[YOU] I have " + count + " of that card!");
+					move();
+				}
+			}
+			if(player == 3)
+			{
+				ArrayList<Card> cards = player3Cards;
+				for(Card p1Card : cards)
+				{
+					if(p1Card.getValue() == card)
+					{
+						player3Cards.remove(p1Card);
+						player2Cards.add(p1Card);
+						count++;
+					}
+				}
+				if(count == 0) 
+				{
+					System.out.println("[PLAYER 3] Go Fish!");
+					pickupCard();
+				}
+				else 
+				{
+					System.out.println("[PLAYER 3] I have " + count + " of that card!");
+					move();
+				}
+			}
+		}
+		else if(turn == 3)
+		{
+			int count = 0;
+			if(player == 1)
+			{
+				ArrayList<Card> cards = player1Cards;
+				for(Card p1Card : cards)
+				{
+					if(p1Card.getValue() == card)
+					{
+						player1Cards.remove(p1Card);
+						player3Cards.add(p1Card);
+						count++;
+					}
+				}
+				if(count == 0) 
+				{
+					System.out.println("[YOU] Go Fish!");
+					pickupCard();
+				}
+				else 
+				{
+					System.out.println("[YOU] I have " + count + " of that card!");
+					move();
+				}
+			}
+			if(player == 2)
+			{
+				ArrayList<Card> cards = player2Cards;
+				for(Card p1Card : cards)
+				{
+					if(p1Card.getValue() == card)
+					{
+						player2Cards.remove(p1Card);
+						player3Cards.add(p1Card);
+						count++;
+					}
+				}
+				if(count == 0) 
+				{
+					System.out.println("[PLAYER 2] Go Fish!");
+					pickupCard();
+				}
+				else 
+				{
+					System.out.println("[PLAYER 2] I have " + count + " of that card!");
 					move();
 				}
 			}
